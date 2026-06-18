@@ -1,122 +1,210 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import React, { useEffect, useState } from 'react';
+import api from './api'; // Tu Axios apuntando a la URL de dev
+
+// Dejamos el MOCK acá abajo como "plan B" por si la API falla o está vacía
+const PRODUCTOS_MOCK = [
+  { id: '1', name: 'Botines Nike Mercurial', description: 'Ideales para velocidad en césped sintético.', price: 189900 },
+  { id: '2', name: 'Botines Adidas Predator', description: 'Máximo control del balón y golpeo preciso.', price: 175000 }
+];
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [productos, setProductos] = useState([]);
+  const [carrito, setCarrito] = useState([]);
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // Le pegamos al endpoint /productos que definieron en dev
+    api.get('/productos')
+      .then((response) => {
+        // Si la API responde bien, guardamos sus productos reales
+        setProductos(response.data);
+        setCargando(false);
+      })
+      .catch((err) => {
+        console.error("Error al conectar con la API:", err);
+        // Si da error de CORS o 404, usamos los mocks para que no se te rompa la pantalla mientras diseñas
+        console.log("Cargando productos de respaldo (Mocks)...");
+        setProductos(PRODUCTOS_MOCK);
+        setCargando(false);
+      });
+  }, []);
+
+  const agregarAlCarrito = (producto) => {
+    setCarrito([...carrito, producto]);
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
+    <div style={{ 
+      maxWidth: '450px', 
+      margin: '0 auto', 
+      padding: '20px', 
+      fontFamily: "'Arial Black', Gadget, sans-serif",
+      backgroundColor: '#f0f0f0',
+      minHeight: '100vh',
+      boxSizing: 'border-box',
+      borderLeft: '4px solid #000',
+      borderRight: '4px solid #000'
+    }}>
+      
+      {/* --- ENCABEZADO --- */}
+      <header style={{ 
+        background: '#fff',
+        border: '4px solid #000',
+        boxShadow: '6px 6px 0px #000',
+        padding: '15px',
+        marginBottom: '30px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+      }}>
         <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
+          <h1 style={{ margin: 0, fontSize: '1.4rem', textTransform: 'uppercase', letterSpacing: '-1px' }}>
+            ⚡ GAMBA STORE
+          </h1>
+          <span style={{ fontSize: '0.75rem', fontFamily: 'monospace', display: 'block', marginTop: '4px' }}>
+            CLIENTE // API DEV
+          </span>
         </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+        
+        <div style={{
+          background: '#ffde00',
+          border: '3px solid #000',
+          padding: '6px 12px',
+          fontWeight: '900',
+          boxShadow: '3px 3px 0px #000',
+          fontSize: '0.9rem'
+        }}>
+          🛒 [{carrito.length}]
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      </header>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      {/* --- CUERPO PRINCIPAL --- */}
+      <main>
+        <h2 style={{ 
+          fontSize: '1.2rem', 
+          textTransform: 'uppercase', 
+          marginBottom: '20px',
+          background: '#000',
+          color: '#fff',
+          display: 'inline-block',
+          padding: '4px 8px'
+        }}>
+          TEMPORADA 2026 // BOTINES
+        </h2>
+
+        {cargando && <p style={{ fontFamily: 'sans-serif', textAlign: 'center' }}>Consultando Firestore en la nube...</p>}
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
+          {productos.map((prod) => (
+            <div key={prod.id} style={{ 
+              background: '#fff', 
+              border: '4px solid #000', 
+              boxShadow: '8px 8px 0px #000',
+              padding: '20px',
+              position: 'relative'
+            }}>
+              <span style={{
+                position: 'absolute',
+                top: '-12px',
+                left: '15px',
+                background: '#fff',
+                border: '2px solid #000',
+                padding: '2px 6px',
+                fontSize: '0.7rem',
+                fontWeight: 'bold'
+              }}>
+                {prod.marca || 'PRODUCTO'}
+              </span>
+
+              {/* Mapeamos con || por si las propiedades vienen en inglés o español desde Firestore */}
+              <h3 style={{ margin: '10px 0 8px 0', fontSize: '1.2rem', textTransform: 'uppercase' }}>
+                {prod.nombre || prod.name}
+              </h3>
+              
+              <p style={{ 
+                fontFamily: 'sans-serif', 
+                color: '#333', 
+                fontSize: '0.85rem', 
+                margin: '0 0 20px 0',
+                lineHeight: '1.4'
+              }}>
+                {prod.descripcion || prod.description || 'Sin descripción disponible.'}
+              </p>
+
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center'
+              }}>
+                <span style={{ fontSize: '1.4rem', fontWeight: '900' }}>
+                  ${Number(prod.precio || prod.price).toLocaleString('es-AR')}
+                </span>
+                
+                <button 
+                  onClick={() => agregarAlCarrito(prod)}
+                  style={{ 
+                    background: '#ffde00', 
+                    border: '3px solid #000', 
+                    padding: '8px 16px', 
+                    fontWeight: '900',
+                    fontSize: '0.85rem',
+                    cursor: 'pointer',
+                    boxShadow: '3px 3px 0px #000',
+                    textTransform: 'uppercase'
+                  }}
+                >
+                  AÑADIR +
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </main>
+
+      {/* --- FORMULARIO DE ENVÍO --- */}
+      {carrito.length > 0 && (
+        <section style={{
+          marginTop: '40px',
+          background: '#fff',
+          border: '4px solid #000',
+          boxShadow: '8px 8px 0px #000',
+          padding: '20px'
+        }}>
+          <h2 style={{ margin: '0 0 15px 0', fontSize: '1.2rem', textTransform: 'uppercase' }}>
+            DATOS DE ENVÍO
+          </h2>
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ display: 'block', fontSize: '0.8rem', marginBottom: '5px' }}>DIRECCIÓN DE ENTREGA:</label>
+            <input 
+              type="text" 
+              placeholder="Ej. Av. Fontana 123, Trelew" 
+              style={{
+                width: '100%',
+                padding: '10px',
+                border: '3px solid #000',
+                fontFamily: 'sans-serif',
+                boxSizing: 'border-box'
+              }}
+            />
+          </div>
+          <button style={{
+            width: '100%',
+            background: '#000',
+            color: '#fff',
+            border: 'none',
+            padding: '12px',
+            fontSize: '1rem',
+            fontWeight: 'bold',
+            cursor: 'pointer',
+            textTransform: 'uppercase'
+          }}>
+            PAGAR CON MERCADOPAGO 💳
+          </button>
+        </section>
+      )}
+    </div>
+  );
 }
 
-export default App
+export default App;
