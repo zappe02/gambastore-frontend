@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 
 function WelcomeScreen({ fuerzaSalida }) {
-  const [visible, setVisible] = useState(true);
   const [renderizar, setRenderizar] = useState(true);
+  const visible = !fuerzaSalida;
 
   useEffect(() => {
     if (fuerzaSalida) {
-      setVisible(false);
       const timer = setTimeout(() => setRenderizar(false), 500);
       return () => clearTimeout(timer);
     }

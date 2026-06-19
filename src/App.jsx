@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 import api from './api'; 
 import WelcomeScreen from './WelcomeScreen';
+import Carrito from './Carrito';
+import Checkout from './Checkout';
+import Exito from './Exito';
+import DetalleProducto from './DetalleProducto';
 
 const PRODUCTOS_MOCK = [
   { id: '1', name: 'Botines Nike Mercurial', description: 'Ideales para velocidad en césped sintético.', price: 189900 },
@@ -12,6 +16,8 @@ function App() {
   const [carrito, setCarrito] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [timerListo, setTimerListo] = useState(false);
+  const [vistaActual, setVistaActual] = useState('catalogo');
+  const [productoSeleccionado, setProductoSeleccionado] = useState(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -89,125 +95,134 @@ function App() {
             </div>
           </header>
 
-          <main>
-            <h2 style={{ 
-              fontSize: '1.2rem', 
-              textTransform: 'uppercase', 
-              marginBottom: '20px',
-              background: '#000',
-              color: '#fff',
-              display: 'inline-block',
-              padding: '4px 8px'
-            }}>
-              TEMPORADA 2026 // BOTINES
-            </h2>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
-              {productos.map((prod) => (
-                <div key={prod.id} style={{ 
-                  background: '#fff', 
-                  border: '4px solid #000', 
-                  boxShadow: '8px 8px 0px #000',
-                  padding: '20px',
-                  position: 'relative'
-                }}>
-                  <span style={{
-                    position: 'absolute',
-                    top: '-12px',
-                    left: '15px',
-                    background: '#fff',
-                    border: '2px solid #000',
-                    padding: '2px 6px',
-                    fontSize: '0.7rem',
-                    fontWeight: 'bold'
-                  }}>
-                    {prod.marca || 'PRODUCTO'}
-                  </span>
-
-                  <h3 style={{ margin: '10px 0 8px 0', fontSize: '1.2rem', textTransform: 'uppercase' }}>
-                    {prod.nombre || prod.name}
-                  </h3>
-                  
-                  <p style={{ 
-                    fontFamily: 'sans-serif', 
-                    color: '#333', 
-                    fontSize: '0.85rem', 
-                    margin: '0 0 20px 0',
-                    lineHeight: '1.4'
-                  }}>
-                    {prod.descripcion || prod.description || 'Sin descripción disponible.'}
-                  </p>
-
-                  <div style={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
-                    alignItems: 'center'
-                  }}>
-                    <span style={{ fontSize: '1.4rem', fontWeight: '900' }}>
-                      ${Number(prod.precio || prod.price).toLocaleString('es-AR')}
-                    </span>
-                    
-                    <button 
-                      onClick={() => agregarAlCarrito(prod)}
-                      style={{ 
-                        background: '#ffde00', 
-                        border: '3px solid #000', 
-                        padding: '8px 16px', 
-                        fontWeight: '900',
-                        fontSize: '0.85rem',
-                        cursor: 'pointer',
-                        boxShadow: '3px 3px 0px #000',
-                        textTransform: 'uppercase'
-                      }}
-                    >
-                      AÑADIR +
-                    </button>
-                  </div>
-                </div>
-              ))}
+          <nav style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: 20,
+            padding: '10px',
+            background: '#fff',
+            border: '4px solid #000',
+            boxShadow: '6px 6px 0px #000'
+          }}>
+            <div onClick={() => setVistaActual('catalogo')} style={{ cursor: 'pointer', fontWeight: '900' }}>
+              ⚡ GAMBA STORE
             </div>
+            <div>
+              <button onClick={() => setVistaActual('carrito')} style={{
+                background: '#ffde00',
+                border: '3px solid #000',
+                padding: '6px 12px',
+                fontWeight: '900',
+                boxShadow: '3px 3px 0px #000',
+                fontSize: '0.9rem',
+                cursor: 'pointer'
+              }}>
+                🛒 [{carrito.length}]
+              </button>
+            </div>
+          </nav>
+
+          <main>
+            {vistaActual === 'catalogo' && (
+              <>
+                <h2 style={{ 
+                  fontSize: '1.2rem', 
+                  textTransform: 'uppercase', 
+                  marginBottom: '20px',
+                  background: '#000',
+                  color: '#fff',
+                  display: 'inline-block',
+                  padding: '4px 8px'
+                }}>
+                  TEMPORADA 2026 // BOTINES
+                </h2>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
+                  {productos.map((prod) => (
+                    <div key={prod.id} style={{ 
+                      background: '#fff', 
+                      border: '4px solid #000', 
+                      boxShadow: '8px 8px 0px #000',
+                      padding: '20px',
+                      position: 'relative'
+                    }}>
+                      <span style={{
+                        position: 'absolute',
+                        top: '-12px',
+                        left: '15px',
+                        background: '#fff',
+                        border: '2px solid #000',
+                        padding: '2px 6px',
+                        fontSize: '0.7rem',
+                        fontWeight: 'bold'
+                      }}>
+                        {prod.marca || 'PRODUCTO'}
+                      </span>
+
+                      <h3 style={{ margin: '10px 0 8px 0', fontSize: '1.2rem', textTransform: 'uppercase', cursor: 'pointer', color: '#000' }} onClick={() => { setProductoSeleccionado(prod); setVistaActual('detalle'); }}>
+                        {prod.nombre || prod.name}
+                      </h3>
+                      
+                      <p style={{ 
+                        fontFamily: 'sans-serif', 
+                        color: '#000', 
+                        fontSize: '0.85rem', 
+                        margin: '0 0 20px 0',
+                        lineHeight: '1.4'
+                      }}>
+                        {prod.descripcion || prod.description || 'Sin descripción disponible.'}
+                      </p>
+
+                      <div style={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        alignItems: 'center'
+                      }}>
+                        <span style={{ fontSize: '1.4rem', fontWeight: '900' }}>
+                          ${Number(prod.precio || prod.price).toLocaleString('es-AR')}
+                        </span>
+                        
+                        <button 
+                          onClick={() => { agregarAlCarrito(prod); setVistaActual('carrito'); }}
+                          style={{ 
+                            background: '#ffde00', 
+                            border: '3px solid #000', 
+                            padding: '8px 16px', 
+                            fontWeight: '900',
+                            fontSize: '0.85rem',
+                            cursor: 'pointer',
+                            boxShadow: '3px 3px 0px #000',
+                            textTransform: 'uppercase'
+                          }}
+                        >
+                          AÑADIR +
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {vistaActual === 'detalle' && (
+              <DetalleProducto product={productoSeleccionado} onBack={() => setVistaActual('catalogo')} />
+            )}
+
+            {vistaActual === 'carrito' && (
+              <Carrito onAvanzar={() => setVistaActual('checkout')} onVolver={() => setVistaActual('catalogo')} />
+            )}
+
+            {vistaActual === 'checkout' && (
+              <Checkout onConfirm={() => { setVistaActual('exito'); setCarrito([]); }} />
+            )}
+
+            {vistaActual === 'exito' && (
+              <Exito onBack={() => { setVistaActual('catalogo'); setCarrito([]); window.scrollTo(0,0); }} />
+            )}
           </main>
 
-          {carrito.length > 0 && (
-            <section style={{
-              marginTop: '40px',
-              background: '#fff',
-              border: '4px solid #000',
-              boxShadow: '8px 8px 0px #000',
-              padding: '20px'
-            }}>
-              <h2 style={{ margin: '0 0 15px 0', fontSize: '1.2rem', textTransform: 'uppercase' }}>
-                DATOS DE ENVÍO
-              </h2>
-              <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', fontSize: '0.8rem', marginBottom: '5px' }}>DIRECCIÓN DE ENTREGA:</label>
-                <input 
-                  type="text" 
-                  placeholder="Ej. Av. Fontana 123, Trelew" 
-                  style={{
-                    width: '100%',
-                    padding: '10px',
-                    border: '3px solid #000',
-                    fontFamily: 'sans-serif',
-                    boxSizing: 'border-box'
-                  }}
-                />
-              </div>
-              <button style={{
-                width: '100%',
-                background: '#000',
-                color: '#fff',
-                border: 'none',
-                padding: '12px',
-                fontSize: '1rem',
-                fontWeight: 'bold',
-                cursor: 'pointer',
-                textTransform: 'uppercase'
-              }}>
-                PAGAR CON MERCADOPAGO 💳
-              </button>
-            </section>
-          )}
+          
         </div>
       )}
     </>
