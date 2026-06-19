@@ -75,7 +75,7 @@ function App() {
             alignItems: 'center'
           }}>
             <div>
-              <h1 style={{ margin: 0, fontSize: '1.4rem', textTransform: 'uppercase', letterSpacing: '-1px' }}>
+              <h1 style={{ margin: 0, fontSize: '1.4rem', textTransform: 'uppercase', letterSpacing: '-1px', color: '#000' }}>
                 ⚡ GAMBA STORE
               </h1>
               <span style={{ fontSize: '0.75rem', fontFamily: 'monospace', display: 'block', marginTop: '4px' }}>
@@ -105,7 +105,7 @@ function App() {
             border: '4px solid #000',
             boxShadow: '6px 6px 0px #000'
           }}>
-            <div onClick={() => setVistaActual('catalogo')} style={{ cursor: 'pointer', fontWeight: '900' }}>
+            <div onClick={() => setVistaActual('catalogo')} style={{ cursor: 'pointer', fontWeight: '900', color: vistaActual === 'catalogo' ? '#ffde00' : '#000', transition: 'color 0.3s' }}>
               ⚡ GAMBA STORE
             </div>
             <div>

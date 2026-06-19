@@ -45,7 +45,8 @@ function WelcomeScreen({ fuerzaSalida }) {
           fontFamily: "'Arial Black', Gadget, sans-serif",
           textTransform: 'uppercase',
           letterSpacing: '-2px',
-          animation: 'blink 1s infinite alternate'
+          animation: 'blink 1s infinite alternate',
+          color: '#000'
         }}>
           ⚡ GAMBA STORE ⚡
         </h1>
