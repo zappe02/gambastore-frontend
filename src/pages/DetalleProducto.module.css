@@ -1,0 +1,161 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: #fff;
+  border: 4px solid #000;
+  box-shadow: 8px 8px 0px #000;
+  padding: 20px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.btnVolver {
+  border: 3px solid #000;
+  padding: 6px 12px;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 900;
+  box-shadow: 3px 3px 0px #000;
+  text-transform: uppercase;
+  color: #000;
+  font-family: 'Arial Black', Impact, sans-serif;
+  align-self: flex-start;
+}
+
+.imagenWrapper {
+  width: 100%;
+  border: 4px solid #000;
+  background: #e0e0e0;
+  overflow: hidden;
+}
+
+.imagen {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.nombre {
+  font-size: 1.8rem;
+  font-weight: 900;
+  margin: 0 0 10px 0;
+  text-transform: uppercase;
+  line-height: 1.1;
+  color: #000;
+}
+
+.fichaBox {
+  background: #f8f8f8;
+  border: 3px solid #000;
+  padding: 15px;
+}
+
+.fichaTitulo {
+  margin: 0 0 10px 0;
+  text-transform: uppercase;
+  color: #000;
+  border-bottom: 2px solid #000;
+  padding-bottom: 5px;
+  font-size: 1.1rem;
+}
+
+.fichaLista {
+  margin: 0;
+  padding-left: 20px;
+  color: #000;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  font-family: sans-serif;
+}
+
+.tallesTitulo {
+  margin: 10px 0;
+  font-size: 1rem;
+  text-transform: uppercase;
+  color: #000;
+}
+
+.tallesGrid {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.talleBtn {
+  border: 3px solid #000;
+  padding: 10px 15px;
+  background: #fff;
+  color: #000;
+  box-shadow: 4px 4px 0px #000;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.1s;
+  font-family: 'Arial Black', Impact, sans-serif;
+}
+
+.talleBtnActivo {
+  background: #000;
+  color: #ffde00;
+  box-shadow: inset 3px 3px 0px rgba(255, 255, 255, 0.2);
+}
+
+.talleBtnAgotado {
+  background: #ccc;
+  color: #666;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.compraFooter {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 10px;
+  border-top: 4px solid #000;
+  padding-top: 20px;
+}
+
+.precioFinal {
+  font-size: 2.2rem;
+  font-weight: 900;
+  text-align: center;
+  color: #000;
+}
+
+.addBtn {
+  background: #ffde00;
+  border: 4px solid #000;
+  box-shadow: 6px 6px 0px #000;
+  padding: 15px;
+  font-size: 1.2rem;
+  font-weight: 900;
+  cursor: pointer;
+  text-transform: uppercase;
+  width: 100%;
+  color: #000;
+  font-family: 'Arial Black', Impact, sans-serif;
+}
+
+.addBtnDisabled {
+  background: #e0e0e0;
+  border: 4px solid #000;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+@media (min-width: 768px) {
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    align-items: start;
+  }
+}
