@@ -7,8 +7,8 @@ import Exito from './Exito';
 import DetalleProducto from './DetalleProducto';
 
 const PRODUCTOS_MOCK = [
-  { id: '1', name: 'Botines Nike Mercurial', description: 'Ideales para velocidad en césped sintético.', price: 189900 },
-  { id: '2', name: 'Botines Adidas Predator', description: 'Máximo control del balón y golpeo preciso.', price: 175000 }
+  { id: '1', nombre: 'Botines Nike Mercurial', descripcion: 'Ideales para velocidad en césped sintético.', precio: 189900 },
+  { id: '2', nombre: 'Botines Adidas Predator', descripcion: 'Máximo control del balón y golpeo preciso.', precio: 175000 }
 ];
 
 function App() {
@@ -24,7 +24,6 @@ function App() {
       setTimerListo(true);
     }, 1800);
 
-    // 🌟 ACÁ ESTÁ LA MAGIA: Le agregamos el prefijo para que Vite lo intercepte
     api.get('/api/api/productos') 
       .then((response) => {
         if (response.data && response.data.data) {
@@ -42,6 +41,7 @@ function App() {
 
     return () => clearTimeout(timer);
   }, []);
+
   const agregarAlCarrito = (producto) => {
     setCarrito([...carrito, producto]);
   };
@@ -50,7 +50,7 @@ function App() {
 
   return (
     <>
-      <WelcomeScreen fuerzaSalida={!mostrarWelcome} />
+      {mostrarWelcome && <WelcomeScreen fuerzaSalida={!mostrarWelcome} />}
       
       {!mostrarWelcome && (
         <div style={{ 
@@ -64,37 +64,7 @@ function App() {
           borderLeft: '4px solid #000',
           borderRight: '4px solid #000'
         }}>
-          <header style={{ 
-            background: '#fff',
-            border: '4px solid #000',
-            boxShadow: '6px 6px 0px #000',
-            padding: '15px',
-            marginBottom: '30px',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center'
-          }}>
-            <div>
-              <h1 style={{ margin: 0, fontSize: '1.4rem', textTransform: 'uppercase', letterSpacing: '-1px', color: '#000' }}>
-                ⚡ GAMBA STORE
-              </h1>
-              <span style={{ fontSize: '0.75rem', fontFamily: 'monospace', display: 'block', marginTop: '4px' }}>
-                CLIENTE // API DEV
-              </span>
-            </div>
-            
-            <div style={{
-              background: '#ffde00',
-              border: '3px solid #000',
-              padding: '6px 12px',
-              fontWeight: '900',
-              boxShadow: '3px 3px 0px #000',
-              fontSize: '0.9rem'
-            }}>
-              🛒 [{carrito.length}]
-            </div>
-          </header>
-
+          
           <nav style={{
             display: 'flex',
             justifyContent: 'space-between',
@@ -106,18 +76,27 @@ function App() {
             boxShadow: '6px 6px 0px #000'
           }}>
             <div onClick={() => setVistaActual('catalogo')} style={{ cursor: 'pointer', fontWeight: '900', color: vistaActual === 'catalogo' ? '#ffde00' : '#000', transition: 'color 0.3s' }}>
-              ⚡ GAMBA STORE
+              <h1 style={{ margin: 0, fontSize: '1.4rem', textTransform: 'uppercase', letterSpacing: '-1px', color: '#000' }}>
+                ⚡ GAMBA STORE
+              </h1>
+              <span style={{ fontSize: '0.75rem', fontFamily: 'monospace', display: 'block', marginTop: '4px', color: '#000' }}>
+                CLIENTE // API DEV
+              </span>
             </div>
             <div>
-              <button onClick={() => setVistaActual('carrito')} style={{
-                background: '#ffde00',
-                border: '3px solid #000',
-                padding: '6px 12px',
-                fontWeight: '900',
-                boxShadow: '3px 3px 0px #000',
-                fontSize: '0.9rem',
-                cursor: 'pointer'
-              }}>
+              <button 
+                type="button"
+                onClick={(e) => { e.preventDefault(); setVistaActual('carrito'); }} 
+                style={{
+                  background: '#ffde00',
+                  border: '3px solid #000',
+                  padding: '6px 12px',
+                  fontWeight: '900',
+                  boxShadow: '3px 3px 0px #000',
+                  fontSize: '0.9rem',
+                  cursor: 'pointer',
+                  color: '#000'
+                }}>
                 🛒 [{carrito.length}]
               </button>
             </div>
@@ -144,60 +123,87 @@ function App() {
                       background: '#fff', 
                       border: '4px solid #000', 
                       boxShadow: '8px 8px 0px #000',
-                      padding: '20px',
-                      position: 'relative'
+                      position: 'relative',
+                      display: 'flex',
+                      flexDirection: 'column'
                     }}>
-                      <span style={{
-                        position: 'absolute',
-                        top: '-12px',
-                        left: '15px',
-                        background: '#fff',
-                        border: '2px solid #000',
-                        padding: '2px 6px',
-                        fontSize: '0.7rem',
-                        fontWeight: 'bold'
-                      }}>
-                        {prod.marca || 'PRODUCTO'}
-                      </span>
-
-                      <h3 style={{ margin: '10px 0 8px 0', fontSize: '1.2rem', textTransform: 'uppercase', cursor: 'pointer', color: '#000' }} onClick={() => { setProductoSeleccionado(prod); setVistaActual('detalle'); }}>
-                        {prod.nombre || prod.name}
-                      </h3>
-                      
-                      <p style={{ 
-                        fontFamily: 'sans-serif', 
-                        color: '#000', 
-                        fontSize: '0.85rem', 
-                        margin: '0 0 20px 0',
-                        lineHeight: '1.4'
-                      }}>
-                        {prod.descripcion || prod.description || 'Sin descripción disponible.'}
-                      </p>
-
                       <div style={{ 
-                        display: 'flex', 
-                        justifyContent: 'space-between', 
-                        alignItems: 'center'
+                        width: '100%', 
+                        height: '200px', 
+                        borderBottom: '4px solid #000', 
+                        background: '#e0e0e0',
+                        overflow: 'hidden'
                       }}>
-                        <span style={{ fontSize: '1.4rem', fontWeight: '900' }}>
-                          ${Number(prod.precio || prod.price).toLocaleString('es-AR')}
+                        <img 
+                          src={prod.imagen_url || 'https://placehold.co/300x200/ffde00/000000?text=SIN+IMAGEN'} 
+                          alt={prod.nombre} 
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                        />
+                      </div>
+
+                      <div style={{ padding: '20px' }}>
+                        <span style={{
+                          position: 'absolute',
+                          top: '-12px',
+                          left: '15px',
+                          background: '#fff',
+                          border: '2px solid #000',
+                          padding: '2px 6px',
+                          fontSize: '0.7rem',
+                          fontWeight: 'bold',
+                          textTransform: 'uppercase',
+                          color: '#000'
+                        }}>
+                          {prod.modelo || 'GAMBA'}
                         </span>
+
+                        <h3 
+                          style={{ margin: '0 0 8px 0', fontSize: '1.2rem', textTransform: 'uppercase', cursor: 'pointer', color: '#000' }} 
+                          onClick={(e) => { e.preventDefault(); setProductoSeleccionado(prod); setVistaActual('detalle'); }}>
+                          {prod.nombre}
+                        </h3>
                         
-                        <button 
-                          onClick={() => { agregarAlCarrito(prod); setVistaActual('carrito'); }}
-                          style={{ 
-                            background: '#ffde00', 
-                            border: '3px solid #000', 
-                            padding: '8px 16px', 
-                            fontWeight: '900',
-                            fontSize: '0.85rem',
-                            cursor: 'pointer',
-                            boxShadow: '3px 3px 0px #000',
-                            textTransform: 'uppercase'
-                          }}
-                        >
-                          AÑADIR +
-                        </button>
+                        <p style={{ 
+                          fontFamily: 'sans-serif', 
+                          color: '#000', 
+                          fontSize: '0.85rem', 
+                          margin: '0 0 20px 0',
+                          lineHeight: '1.4'
+                        }}>
+                          {prod.descripcion || 'Sin descripción disponible.'}
+                        </p>
+
+                        <div style={{ 
+                          display: 'flex', 
+                          justifyContent: 'space-between', 
+                          alignItems: 'center'
+                        }}>
+                          <span style={{ fontSize: '1.4rem', fontWeight: '900', color: '#000' }}>
+                            ${Number(prod.precio).toLocaleString('es-AR')}
+                          </span>
+                          
+                          <button 
+                            type="button"
+                            onClick={(e) => { 
+                              e.preventDefault(); 
+                              setProductoSeleccionado(prod); 
+                              setVistaActual('detalle'); 
+                            }}
+                            style={{ 
+                              background: '#ffde00', 
+                              border: '3px solid #000', 
+                              padding: '8px 16px', 
+                              fontWeight: '900',
+                              fontSize: '0.85rem',
+                              cursor: 'pointer',
+                              boxShadow: '3px 3px 0px #000',
+                              textTransform: 'uppercase',
+                              color: '#000'
+                            }}
+                          >
+                            VER PRODUCTO
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -206,23 +212,32 @@ function App() {
             )}
 
             {vistaActual === 'detalle' && (
-              <DetalleProducto product={productoSeleccionado} onBack={() => setVistaActual('catalogo')} />
+              <DetalleProducto
+                product={productoSeleccionado}
+                onBack={() => setVistaActual('catalogo')}
+                onAddToCart={(p) => { agregarAlCarrito(p); setVistaActual('carrito'); }}
+              />
             )}
 
             {vistaActual === 'carrito' && (
-              <Carrito onAvanzar={() => setVistaActual('checkout')} onVolver={() => setVistaActual('catalogo')} />
+              <Carrito 
+                carrito={carrito} 
+                onAvanzar={() => setVistaActual('checkout')} 
+                onVolver={() => setVistaActual('catalogo')} 
+              />
             )}
 
             {vistaActual === 'checkout' && (
-              <Checkout onConfirm={() => { setVistaActual('exito'); setCarrito([]); }} />
+              <Checkout 
+                onConfirm={() => { setVistaActual('exito'); setCarrito([]); }} 
+                onVolver={() => setVistaActual('carrito')}
+              />
             )}
 
             {vistaActual === 'exito' && (
-              <Exito onBack={() => { setVistaActual('catalogo'); setCarrito([]); window.scrollTo(0,0); }} />
+              <Exito onBack={() => { setVistaActual('catalogo'); window.scrollTo(0,0); }} />
             )}
           </main>
-
-          
         </div>
       )}
     </>

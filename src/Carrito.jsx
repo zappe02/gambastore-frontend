@@ -1,128 +1,159 @@
-const Carrito = ({ onAvanzar, onVolver }) => {
-  const items = [
-    { id: 1, name: 'ZAPATILLAS RETRO', brand: 'GAMBA', qty: 1, price: 79.99 },
-    { id: 2, name: 'CAMISETA LOGO', brand: 'GAMBA', qty: 2, price: 19.5 },
-    { id: 3, name: 'CALCETINES OG', brand: 'GAMBA', qty: 3, price: 4.99 }
-  ]
+import React from 'react';
 
-  const total = items.reduce((s, it) => s + it.price * it.qty, 0)
+const Carrito = ({ carrito = [], onAvanzar, onVolver }) => {
+  const total = carrito.reduce((sum, item) => sum + Number(item.precio || 0), 0);
 
   const styles = {
     wrapper: {
-      width: 'calc(100% - 12px)',
-      margin: '24px auto',
-      padding: 24,
+      width: '100%',
+      padding: '20px',
       boxSizing: 'border-box',
       background: '#fff',
       border: '4px solid #000',
       boxShadow: '8px 8px 0px #000',
-      fontFamily: 'Arial Black, Impact, sans-serif',
+      fontFamily: "'Arial Black', Impact, sans-serif",
       textTransform: 'uppercase',
-      color: '#000'
+      color: '#000',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '20px'
     },
     header: {
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom: 16,
-      boxSizing: 'border-box'
+      borderBottom: '4px solid #000',
+      paddingBottom: '10px'
     },
-    title: { fontSize: 20, fontWeight: 900 },
-    ticket: {
-      display: 'flex',
-      gap: 24,
-      boxSizing: 'border-box'
-    },
+    /* 🌟 FORZAMOS EL COLOR NEGRO ACÁ */
+    title: { fontSize: '1.5rem', fontWeight: 900, margin: 0, color: '#000' }, 
     list: {
-      flex: 1,
-      borderRight: '4px solid #000',
-      paddingRight: 16,
-      boxSizing: 'border-box'
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '10px'
     },
     row: {
       display: 'flex',
-      justifyContent: 'space-between',
-      padding: '12px 0',
-      borderBottom: '2px dashed #000'
+      gap: '15px',
+      padding: '15px 0',
+      borderBottom: '2px dashed #000',
+      alignItems: 'center'
     },
-    itemName: { fontSize: 14, fontWeight: 900 },
-    itemMeta: { fontSize: 12, fontWeight: 700 },
-    stub: {
-      flexBasis: '30%',
+    imageContainer: {
+      width: '70px',
+      height: '70px',
+      border: '3px solid #000',
+      background: '#f0f0f0',
+      flexShrink: 0,
+      overflow: 'hidden'
+    },
+    image: {
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover'
+    },
+    itemDetails: {
+      flex: 1,
       display: 'flex',
       flexDirection: 'column',
-      gap: 12,
-      paddingLeft: 16,
-      boxSizing: 'border-box'
+      gap: '5px'
+    },
+    itemName: { fontSize: '1rem', fontWeight: 900, lineHeight: 1.2, color: '#000' },
+    itemMeta: { 
+      fontSize: '0.75rem', 
+      fontWeight: 700, 
+      background: '#000', 
+      color: '#fff', 
+      alignSelf: 'flex-start', 
+      padding: '2px 6px' 
+    },
+    itemPrice: { fontSize: '1.2rem', fontWeight: 900, textAlign: 'right', color: '#000' },
+    emptyState: {
+      textAlign: 'center',
+      padding: '40px 0',
+      fontSize: '1.2rem',
+      fontWeight: 900,
+      color: '#000'
     },
     stubBox: {
       background: '#fff',
       border: '4px solid #000',
-      padding: 16,
-      boxShadow: '8px 8px 0px #000',
-      boxSizing: 'border-box'
+      padding: '20px',
+      boxShadow: '6px 6px 0px #000',
+      boxSizing: 'border-box',
+      marginTop: '10px'
     },
     totalRow: {
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginTop: 8
+      marginBottom: '20px'
     },
-    totalLabel: { fontSize: 18, fontWeight: 900 },
-    totalValue: { fontSize: 24, fontWeight: 900, color: '#ffde00' },
+    totalLabel: { fontSize: '1.5rem', fontWeight: 900, color: '#000' },
+    totalValue: { fontSize: '1.8rem', fontWeight: 900, color: '#000' },
     checkoutButton: {
-      marginTop: 12,
-      padding: '14px 18px',
+      width: '100%',
+      padding: '15px',
       background: '#ffde00',
       border: '4px solid #000',
-      boxShadow: '8px 8px 0px #000',
+      boxShadow: '6px 6px 0px #000',
+      fontSize: '1.2rem',
       fontWeight: 900,
       cursor: 'pointer',
-      boxSizing: 'border-box'
+      textTransform: 'uppercase',
+      color: '#000'
     }
-  }
+  };
 
   return (
     <div style={styles.wrapper}>
       <div style={styles.header}>
-        <div style={styles.title}>CARRITO DE COMPRA</div>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <button onClick={() => onVolver && onVolver()} style={{ border: '3px solid #000', padding: '6px 10px', cursor: 'pointer' }}>VOLVER</button>
-          <div style={{ fontWeight: 900 }}>TICKET</div>
-        </div>
+        <h2 style={styles.title}>CARRITO</h2>
+        {/* 🌟 FORZAMOS EL COLOR NEGRO EN EL BOTÓN VOLVER */}
+        <button 
+          onClick={onVolver} 
+          style={{ border: '3px solid #000', padding: '6px 12px', background: '#fff', color: '#000', cursor: 'pointer', fontWeight: 900, boxShadow: '3px 3px 0px #000' }}
+        >
+          VOLVER
+        </button>
       </div>
 
-      <div style={styles.ticket}>
-        <div style={styles.list}>
-          {items.map((it) => (
-            <div key={it.id} style={styles.row}>
-              <div>
-                <div style={styles.itemName}>{it.name}</div>
-                <div style={styles.itemMeta}>{it.brand} · x{it.qty}</div>
+      <div style={styles.list}>
+        {carrito.length === 0 ? (
+          <div style={styles.emptyState}>TU CARRITO ESTÁ VACÍO</div>
+        ) : (
+          carrito.map((it, index) => (
+            <div key={index} style={styles.row}>
+              <div style={styles.imageContainer}>
+                <img 
+                  src={it.imagen_url || 'https://placehold.co/80x80/000/fff?text=IMG'} 
+                  alt={it.nombre} 
+                  style={styles.image} 
+                />
               </div>
-              <div style={{ textAlign: 'right' }}>
-                <div style={styles.itemName}>{(it.price * it.qty).toFixed(2)}€</div>
-                <div style={styles.itemMeta}>{it.price.toFixed(2)}€ c/u</div>
+              <div style={styles.itemDetails}>
+                <div style={styles.itemName}>{it.nombre}</div>
+                <div style={styles.itemMeta}>TALLE: {it.talleElegido || 'N/A'}</div>
               </div>
+              <div style={styles.itemPrice}>${Number(it.precio).toLocaleString('es-AR')}</div>
             </div>
-          ))}
-        </div>
+          ))
+        )}
+      </div>
 
-        <div style={styles.stub}>
-          <div style={styles.stubBox}>
-            <div style={styles.totalRow}>
-              <div style={styles.totalLabel}>TOTAL</div>
-              <div style={styles.totalValue}>{total.toFixed(2)}€</div>
-            </div>
-
-            <button onClick={() => onAvanzar && onAvanzar()} style={styles.checkoutButton} type="button">
-              PAGAR
-            </button>
+      {carrito.length > 0 && (
+        <div style={styles.stubBox}>
+          <div style={styles.totalRow}>
+            <div style={styles.totalLabel}>TOTAL</div>
+            <div style={styles.totalValue}>${total.toLocaleString('es-AR')}</div>
           </div>
+          <button onClick={onAvanzar} style={styles.checkoutButton}>
+            IR A PAGAR
+          </button>
         </div>
-      </div>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default Carrito
+export default Carrito;
