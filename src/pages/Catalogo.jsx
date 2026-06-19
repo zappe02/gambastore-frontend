@@ -3,14 +3,14 @@ import styles from './Catalogo.module.css';
 const Catalogo = ({ productos, onVerProducto }) => {
   return (
     <>
-      <h2 className={styles.titulo}>TEMPORADA 2026 // BOTINES</h2>
+      <h2 className={styles.titulo}>PLAYER SELECT // TEMPORADA 2026</h2>
 
       <div className={styles.grid}>
         {productos.map((prod) => (
           <div key={prod.id} className={styles.card}>
             <div className={styles.cardImage}>
               <img
-                src={prod.imagen_url || 'https://placehold.co/300x200/ffde00/000000?text=SIN+IMAGEN'}
+                src={prod.imagen_url || 'https://placehold.co/300x200/17191b/ffd400?text=SIN+IMAGEN'}
                 alt={prod.nombre}
               />
             </div>
@@ -31,7 +31,7 @@ const Catalogo = ({ productos, onVerProducto }) => {
                   ${Number(prod.precio).toLocaleString('es-AR')}
                 </span>
                 <button type="button" className={styles.btnVer} onClick={() => onVerProducto(prod)}>
-                  VER PRODUCTO
+                  SELECT ▸
                 </button>
               </div>
             </div>

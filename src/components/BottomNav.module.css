@@ -4,9 +4,10 @@
   left: 0;
   right: 0;
   display: flex;
-  border-top: 4px solid #000;
-  background: #fff;
+  border-top: 4px solid var(--border-color);
+  background: var(--locker-charcoal);
   z-index: 100;
+  box-shadow: 0 -4px 0px #000;
 }
 
 .item {
@@ -18,41 +19,33 @@
   padding: 10px 4px;
   border: none;
   border-right: 2px solid #000;
-  background: #fff;
-  color: #000;
-  font-family: 'Arial Black', Impact, sans-serif;
-  font-weight: 900;
-  font-size: 0.6rem;
+  background: var(--locker-charcoal);
+  color: var(--scoreboard-dim);
+  font-family: var(--font-hud);
+  font-weight: 400;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
   cursor: pointer;
   position: relative;
-  gap: 4px;
+  gap: 2px;
+  transition: background 0.1s, color 0.1s;
 }
 
 .itemActive {
-  background: #000;
-  color: #ffde00;
+  background: var(--ink);
+  color: var(--coin-yellow);
+  box-shadow: inset 0 3px 0px var(--coin-yellow);
 }
 
 .icon {
   font-size: 1.3rem;
   line-height: 1;
+  filter: grayscale(1) brightness(1.4);
 }
 
-.badge {
-  position: absolute;
-  top: 6px;
-  right: 18%;
-  background: #ffde00;
-  border: 2px solid #000;
-  border-radius: 50%;
-  width: 18px;
-  height: 18px;
-  font-size: 0.65rem;
-  font-weight: 900;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #000;
+.itemActive .icon {
+  filter: none;
+  text-shadow: 0 0 8px rgba(255, 212, 0, 0.6);
 }
 
 @media (min-width: 768px) {

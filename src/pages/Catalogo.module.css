@@ -1,11 +1,15 @@
 .titulo {
-  font-size: 1.2rem;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 1px;
   text-transform: uppercase;
-  margin-bottom: 20px;
-  background: #000;
-  color: #fff;
+  margin-bottom: 24px;
+  background: var(--ink);
+  color: var(--coin-yellow);
   display: inline-block;
-  padding: 4px 8px;
+  padding: 8px 12px;
+  border: 2px solid var(--coin-yellow);
+  line-height: 1.6;
 }
 
 .grid {
@@ -14,20 +18,60 @@
   gap: 25px;
 }
 
+/* "Player Select" card — pantalla de selección de jugador */
 .card {
-  background: #fff;
+  background: var(--locker-charcoal);
   border: 4px solid #000;
-  box-shadow: 8px 8px 0px #000;
+  box-shadow: var(--shadow-pixel-lg);
   position: relative;
   display: flex;
   flex-direction: column;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.card::before,
+.card::after {
+  content: '';
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  pointer-events: none;
+  transition: border-color 0.15s ease, filter 0.15s ease;
+}
+
+.card::before {
+  top: -8px;
+  left: -8px;
+  border-top: 4px solid transparent;
+  border-left: 4px solid transparent;
+}
+
+.card::after {
+  bottom: -8px;
+  right: -8px;
+  border-bottom: 4px solid transparent;
+  border-right: 4px solid transparent;
+}
+
+.card:hover,
+.card:focus-within {
+  transform: translate(-2px, -2px);
+  box-shadow: 10px 10px 0px #000;
+}
+
+.card:hover::before,
+.card:hover::after,
+.card:focus-within::before,
+.card:focus-within::after {
+  border-color: var(--coin-yellow);
+  filter: drop-shadow(0 0 6px rgba(255, 212, 0, 0.6));
 }
 
 .cardImage {
   width: 100%;
   height: 200px;
   border-bottom: 4px solid #000;
-  background: #e0e0e0;
+  background: var(--pitch-night);
   overflow: hidden;
 }
 
@@ -35,36 +79,41 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  filter: contrast(1.05) saturate(1.05);
 }
 
 .cardBody {
   padding: 20px;
 }
 
+/* Número de "camiseta" — reemplaza el tag de modelo */
 .modelo {
   position: absolute;
-  top: -12px;
+  top: -14px;
   left: 15px;
-  background: #fff;
+  background: var(--coin-yellow);
   border: 2px solid #000;
-  padding: 2px 6px;
-  font-size: 0.7rem;
-  font-weight: bold;
+  padding: 2px 8px;
+  font-family: var(--font-hud);
+  font-size: 1rem;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
-  color: #000;
+  color: var(--ink);
+  z-index: 1;
 }
 
 .nombre {
   margin: 0 0 8px 0;
-  font-size: 1.2rem;
+  font-size: 1.15rem;
+  font-weight: 700;
   text-transform: uppercase;
   cursor: pointer;
-  color: #000;
+  color: var(--scoreboard-white);
 }
 
 .descripcion {
-  font-family: sans-serif;
-  color: #000;
+  font-family: var(--font-body);
+  color: var(--scoreboard-dim);
   font-size: 0.85rem;
   margin: 0 0 20px 0;
   line-height: 1.4;
@@ -77,22 +126,28 @@
 }
 
 .precio {
-  font-size: 1.4rem;
-  font-weight: 900;
-  color: #000;
+  font-family: var(--font-hud);
+  font-size: 1.8rem;
+  color: var(--coin-yellow);
 }
 
 .btnVer {
-  background: #ffde00;
+  background: var(--coin-yellow);
   border: 3px solid #000;
-  padding: 8px 16px;
-  font-weight: 900;
-  font-size: 0.85rem;
+  padding: 10px 16px;
+  font-size: 0.6rem;
+  letter-spacing: 1px;
   cursor: pointer;
-  box-shadow: 3px 3px 0px #000;
+  box-shadow: var(--shadow-pixel-sm);
   text-transform: uppercase;
-  color: #000;
-  font-family: 'Arial Black', Impact, sans-serif;
+  color: var(--ink);
+  font-family: var(--font-display);
+  clip-path: var(--clip-pixel);
+  transition: transform 0.1s ease;
+}
+
+.btnVer:hover {
+  transform: translate(-1px, -1px);
 }
 
 @media (min-width: 768px) {

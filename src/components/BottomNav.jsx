@@ -3,16 +3,15 @@ import styles from './BottomNav.module.css';
 const NAV_ITEMS = [
   { id: 'catalogo',   label: 'INICIO',      icon: '🏠' },
   { id: 'categorias', label: 'CATEGORÍAS',   icon: '🏷️' },
-  { id: 'carrito',    label: 'CARRITO',      icon: '🛒' },
+  { id: 'marcas',     label: 'MARCAS',       icon: '👟' },
   { id: 'cuenta',     label: 'CUENTA',       icon: '👤' },
 ];
 
-const BottomNav = ({ vistaActual, setVistaActual, carritoCount }) => {
+const BottomNav = ({ vistaActual, setVistaActual }) => {
   return (
     <nav className={styles.nav}>
       {NAV_ITEMS.map((item) => {
         const isActive = vistaActual === item.id;
-        const showBadge = item.id === 'carrito' && carritoCount > 0;
 
         return (
           <button
@@ -23,7 +22,6 @@ const BottomNav = ({ vistaActual, setVistaActual, carritoCount }) => {
           >
             <span className={styles.icon}>{item.icon}</span>
             {item.label}
-            {showBadge && <span className={styles.badge}>{carritoCount}</span>}
           </button>
         );
       })}

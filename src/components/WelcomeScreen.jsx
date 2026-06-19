@@ -19,6 +19,7 @@ function WelcomeScreen({ fuerzaSalida }) {
       <div className={styles.card}>
         <h1 className={styles.titulo}>⚡ GAMBA STORE ⚡</h1>
         <p className={styles.subtitulo}>TEMPORADA 2026 // LOADING</p>
+        <p className={styles.pressStart}>PRESS START</p>
       </div>
     </div>
   );
