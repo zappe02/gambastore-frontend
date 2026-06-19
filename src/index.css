@@ -1,3 +1,39 @@
+/* ============================================================
+   GAMBA STORE — Retro Arcade Football Design Tokens
+   ============================================================ */
+:root {
+  /* Color tokens */
+  --pitch-night: #0b0d0e;
+  --locker-charcoal: #17191b;
+  --locker-charcoal-raised: #1f2225;
+  --scoreboard-white: #f4f1e8;
+  --scoreboard-dim: #9a978f;
+  --coin-yellow: #ffd400;
+  --coin-yellow-dim: #b89b00;
+  --pitch-green: #3ddc73;
+  --foul-red: #e5484d;
+  --ink: #0b0d0e;
+
+  /* Borders & shadows — recolored hard-edge / pixel language */
+  --border-w: 4px;
+  --border-color: #000000;
+  --shadow-pixel: 6px 6px 0px #000000;
+  --shadow-pixel-sm: 3px 3px 0px #000000;
+  --shadow-pixel-lg: 8px 8px 0px #000000;
+  --glow-accent: 0 0 0 3px rgba(255, 212, 0, 0.4), 0 0 16px rgba(255, 212, 0, 0.25);
+  --clip-pixel: polygon(
+    0 6px, 6px 6px, 6px 0,
+    calc(100% - 6px) 0, calc(100% - 6px) 6px, 100% 6px,
+    100% calc(100% - 6px), calc(100% - 6px) calc(100% - 6px), calc(100% - 6px) 100%,
+    6px 100%, 6px calc(100% - 6px), 0 calc(100% - 6px)
+  );
+
+  /* Typography roles */
+  --font-display: 'Press Start 2P', 'Courier New', monospace;
+  --font-hud: 'VT323', 'Courier New', monospace;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -5,9 +41,52 @@
 body {
   margin: 0;
   padding: 0;
+  background-color: var(--pitch-night);
+  color: var(--scoreboard-white);
+  font-family: var(--font-body);
 }
 
 #root {
   width: 100%;
   min-height: 100vh;
+  position: relative;
+}
+
+/* Static CRT scanline + vignette texture — pure texture, no motion */
+#root::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.18) 0px,
+      rgba(0, 0, 0, 0.18) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.55) 100%);
+  mix-blend-mode: multiply;
+  opacity: 0.55;
+}
+
+/* Accessible focus ring — visible on every dark surface */
+:focus-visible {
+  outline: 3px solid var(--coin-yellow);
+  outline-offset: 2px;
+  box-shadow: var(--glow-accent);
+}
+
+button, input {
+  font-family: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

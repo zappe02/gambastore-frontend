@@ -2,12 +2,12 @@
   width: 100%;
   padding: 20px;
   box-sizing: border-box;
-  background: #fff;
+  background: var(--locker-charcoal);
   border: 4px solid #000;
-  box-shadow: 8px 8px 0px #000;
-  font-family: 'Arial Black', Impact, sans-serif;
+  box-shadow: var(--shadow-pixel-lg);
+  font-family: var(--font-body);
   text-transform: uppercase;
-  color: #000;
+  color: var(--scoreboard-white);
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -23,18 +23,22 @@
 
 .titulo {
   margin: 0;
-  font-size: 1.5rem;
-  font-weight: 900;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+  color: var(--coin-yellow);
 }
 
 .btnVolver {
   border: 3px solid #000;
   padding: 6px 12px;
-  background: #fff;
+  background: var(--scoreboard-white);
+  color: var(--ink);
   cursor: pointer;
-  font-weight: 900;
-  box-shadow: 3px 3px 0px #000;
-  font-family: 'Arial Black', Impact, sans-serif;
+  font-weight: 700;
+  box-shadow: var(--shadow-pixel-sm);
+  font-family: var(--font-hud);
+  font-size: 1.05rem;
 }
 
 .section {
@@ -45,25 +49,41 @@
 }
 
 .sectionLabel {
-  font-size: 1.1rem;
-  font-weight: 900;
-  background: #000;
-  color: #fff;
-  padding: 4px 8px;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  background: var(--ink);
+  color: var(--coin-yellow);
+  padding: 6px 10px;
   align-self: flex-start;
+  line-height: 1.6;
 }
 
+/* Inputs estilo terminal de arcade */
 .input {
   width: 100%;
   padding: 14px 12px;
+  background: var(--pitch-night);
   border: 4px solid #000;
-  box-shadow: 6px 6px 0px #000;
+  box-shadow: var(--shadow-pixel);
   font-size: 1rem;
-  font-weight: bold;
+  font-weight: 600;
   outline: none;
   box-sizing: border-box;
-  font-family: sans-serif;
+  font-family: var(--font-body);
   text-transform: uppercase;
+  color: var(--scoreboard-white);
+  caret-color: var(--coin-yellow);
+}
+
+.input::placeholder {
+  color: var(--scoreboard-dim);
+  text-transform: none;
+}
+
+.input:focus {
+  border-color: var(--coin-yellow);
+  box-shadow: var(--shadow-pixel), var(--glow-accent);
 }
 
 .row {
@@ -76,17 +96,18 @@
 .btnPagar {
   margin-top: 10px;
   padding: 18px 20px;
-  background: #ffde00;
+  background: var(--coin-yellow);
   border: 4px solid #000;
-  box-shadow: 6px 6px 0px #000;
-  font-size: 1.2rem;
-  font-weight: 900;
+  box-shadow: var(--shadow-pixel);
+  font-size: 0.85rem;
+  letter-spacing: 1px;
   cursor: pointer;
   box-sizing: border-box;
   text-transform: uppercase;
   width: 100%;
-  font-family: 'Arial Black', Impact, sans-serif;
-  color: #000;
+  font-family: var(--font-display);
+  color: var(--ink);
+  clip-path: var(--clip-pixel);
 }
 
 @media (min-width: 768px) {

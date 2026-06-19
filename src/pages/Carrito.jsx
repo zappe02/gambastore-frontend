@@ -12,13 +12,13 @@ const Carrito = ({ carrito = [], onAvanzar, onVolver }) => {
 
       <div className={styles.list}>
         {carrito.length === 0 ? (
-          <div className={styles.emptyState}>TU CARRITO ESTÁ VACÍO</div>
+          <div className={styles.emptyState}>GAME OVER<br />NO HAY BOTINES EN CANCHA</div>
         ) : (
           carrito.map((it, index) => (
             <div key={index} className={styles.row}>
               <div className={styles.imgBox}>
                 <img
-                  src={it.imagen_url || 'https://placehold.co/80x80/000/fff?text=IMG'}
+                  src={it.imagen_url || 'https://placehold.co/80x80/17191b/ffd400?text=IMG'}
                   alt={it.nombre}
                 />
               </div>

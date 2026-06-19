@@ -11,13 +11,12 @@ const DetalleProducto = ({ product, onBack, onAddToCart }) => {
   const tipo = product.tipo || 'Multiterreno';
   const descripcion = product.descripcion || 'Este producto no cuenta con una descripción detallada en este momento.';
   const precio = typeof product.precio === 'number' ? `$${product.precio.toLocaleString('es-AR')}` : product.precio;
-  const imagen = product.imagen_url || 'https://placehold.co/600x600/f0f0f0/000000?text=SIN+IMAGEN';
+  const imagen = product.imagen_url || 'https://placehold.co/600x600/17191b/ffd400?text=SIN+IMAGEN';
   const talles = product.talles || [];
 
   const handleAñadir = () => {
     if (!talleSeleccionado) return;
     onAddToCart({ ...product, talleElegido: talleSeleccionado });
-    onBack();
   };
 
   return (
