@@ -24,7 +24,8 @@ function App() {
       setTimerListo(true);
     }, 1800);
 
-    api.get('/productos')
+    // 🌟 ACÁ ESTÁ LA MAGIA: Le agregamos el prefijo para que Vite lo intercepte
+    api.get('/api/api/productos') 
       .then((response) => {
         if (response.data && response.data.data) {
           setProductos(response.data.data);
@@ -41,7 +42,6 @@ function App() {
 
     return () => clearTimeout(timer);
   }, []);
-
   const agregarAlCarrito = (producto) => {
     setCarrito([...carrito, producto]);
   };
