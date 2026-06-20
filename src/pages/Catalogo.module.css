@@ -163,3 +163,50 @@
     grid-template-columns: repeat(4, 1fr);
   }
 }
+
+
+/* --- BANNER DE FILTROS (Usando tus variables) --- */
+.bannerFiltro {
+  background: var(--coin-yellow);
+  border: 4px solid #000;
+  padding: 12px 16px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-wrap: wrap; /* Clave para mobile: baja de línea si no entra */
+  gap: 15px;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--shadow-pixel-sm);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.textoFiltro {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  color: var(--ink);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  line-height: 1.4;
+  flex: 1; /* Permite que el texto se acomode */
+  min-width: 200px;
+}
+
+.btnLimpiar {
+  background: var(--ink);
+  color: var(--coin-yellow);
+  border: 3px solid #000;
+  padding: 8px 14px;
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+  text-transform: uppercase;
+  clip-path: var(--clip-pixel); /* Sumamos tu recorte estilo pixel */
+  transition: transform 0.1s ease;
+  flex-shrink: 0; /* Evita que el botón se aplaste en pantallas chicas */
+}
+
+.btnLimpiar:hover, .btnLimpiar:focus {
+  transform: translate(-2px, -2px);
+}

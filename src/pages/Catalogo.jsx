@@ -1,9 +1,25 @@
 import styles from './Catalogo.module.css';
 
-const Catalogo = ({ productos, onVerProducto }) => {
+const Catalogo = ({ productos, onVerProducto, filtroActual, onLimpiarFiltro }) => {
   return (
     <>
       <h2 className={styles.titulo}>PLAYER SELECT // TEMPORADA 2026</h2>
+
+      {/* 🌟 NUEVO: BANNER DE FILTRO ACTIVO */}
+      {filtroActual && filtroActual.tipo !== 'todos' && (
+        <div className={styles.bannerFiltro}>
+          <span className={styles.textoFiltro}>
+            FILTRANDO {filtroActual.tipo === 'marca' ? 'MARCA' : 'TERRENO'}: {filtroActual.valor}
+          </span>
+          <button
+            type="button"
+            className={styles.btnLimpiar}
+            onClick={onLimpiarFiltro}
+          >
+            [X] LIMPIAR
+          </button>
+        </div>
+      )}
 
       <div className={styles.grid}>
         {productos.map((prod) => (
