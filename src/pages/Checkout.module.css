@@ -71,7 +71,7 @@
   outline: none;
   box-sizing: border-box;
   font-family: var(--font-body);
-  text-transform: uppercase;
+  text-transform: none;
   color: var(--scoreboard-white);
   caret-color: var(--coin-yellow);
 }

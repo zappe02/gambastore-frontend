@@ -30,7 +30,15 @@ const Checkout = ({ carrito = [], onVolver }) => {
 
   // 3. Función para mandar los datos al backend
   const procesarCompra = async (e) => {
-    e.preventDefault(); // Evita que la página se recargue al enviar el formulario
+    if (e) e.preventDefault(); // Evita que la página se recargue al enviar el formulario
+
+    // Validamos el formulario nativamente (si se hace click en el botón)
+    const form = e?.currentTarget?.form || (e?.currentTarget && e.currentTarget.tagName === 'FORM' ? e.currentTarget : null);
+    if (form && !form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
     setCargando(true);
     setError(null);
 
@@ -40,32 +48,42 @@ const Checkout = ({ carrito = [], onVolver }) => {
         cliente: formData,
         productos: carrito.map(item => ({
           id: item.id,
-          cantidad: 1, 
-          talle: item.talleElegido
+          nombre: item.nombre,
+          precio: item.precio,
+          cantidad: item.cantidad || 1, 
+          talle: item.talleElegido || 'N/A'
         }))
       };
 
       // Hacemos el pedido a Laravel
+      // Nota: Usamos /api/api/pedidos para coincidir con la configuración del proxy de Vite (/api) 
+      // y el prefijo de la API de Laravel (/api/pedidos), similar a como se hace con productos.
       const response = await api.post('/api/api/pedidos', payload);
 
       // Si Laravel responde con la URL de Mercado Pago, guardamos el pedido y redirigimos
       if (response.data && response.data.init_point) {
+        // Calculamos el total de forma segura
+        const totalCalculado = carrito.reduce((acc, item) => acc + (Number(item.precio || 0) * (item.cantidad || 1)), 0);
+
+        // Guardamos un registro básico en localStorage
         const pedidoGuardado = {
-          id: 'GAMBA-' + Math.floor(Math.random() * 10000), // Inventamos un ID temporal
-          fecha: new Date().toLocaleDateString(),
-          total: carrito.reduce((acc, item) => acc + (Number(item.precio) * item.cantidad), 0)
+          id: 'GAMBA-' + Math.floor(Math.random() * 1000000), // Generamos un ID con 'GAMBA-' y número aleatorio
+          fecha: new Date().toLocaleDateString('es-AR'), // Guardamos la fecha de hoy
+          total: totalCalculado // Calculamos el total
         };
 
         const historialPrevio = JSON.parse(localStorage.getItem('gamba_pedidos')) || [];
         localStorage.setItem('gamba_pedidos', JSON.stringify([pedidoGuardado, ...historialPrevio]));
 
+        // Redirigimos al usuario a la URL de Mercado Pago
         window.location.href = response.data.init_point; 
       } else {
-        throw new Error("No se recibió el link de pago del servidor.");
+        throw new Error("No se recibió el link de pago (init_point) del servidor.");
       }
 
     } catch (err) {
       console.error("Error al procesar el pago:", err);
+      alert("Hubo un problema al conectar con la pasarela de pago. Por favor, intentá nuevamente.");
       setError("Hubo un error al conectar con el servidor. Revisá la consola.");
       setCargando(false);
     }
@@ -108,6 +126,7 @@ const Checkout = ({ carrito = [], onVolver }) => {
           
           <button 
             type="submit" 
+            onClick={procesarCompra}
             className={styles.btnPagar} 
             disabled={cargando || carrito.length === 0}
             style={cargando ? { backgroundColor: '#ccc', cursor: 'not-allowed' } : {}}

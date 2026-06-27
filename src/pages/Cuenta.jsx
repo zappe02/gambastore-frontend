@@ -1,16 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import styles from './Cuenta.module.css';
 
 const Cuenta = () => {
   const [codigoTracking, setCodigoTracking] = useState('');
   const [estadoBusqueda, setEstadoBusqueda] = useState(null);
-  const [historial, setHistorial] = useState([]);
+  const [historial] = useState(() => {
+    if (typeof window === 'undefined') return [];
 
-  // Al cargar la pantalla, leemos la memoria del navegador
-  useEffect(() => {
-    const pedidosGuardados = JSON.parse(localStorage.getItem('gamba_pedidos')) || [];
-    setHistorial(pedidosGuardados);
-  }, []);
+    try {
+      const pedidosGuardados = JSON.parse(localStorage.getItem('gamba_pedidos')) || [];
+      return pedidosGuardados;
+    } catch {
+      return [];
+    }
+  });
 
   const handleBuscar = (e) => {
     e.preventDefault();
