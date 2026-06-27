@@ -12,6 +12,7 @@ const Checkout = ({ carrito = [], onVolver }) => {
     email: '',
     direccion: '',
     ciudad: '',
+    provincia: '', // Provincia requerida por el backend
     codigoPostal: '',
     pais: 'Argentina'
   });
@@ -43,15 +44,32 @@ const Checkout = ({ carrito = [], onVolver }) => {
     setError(null);
 
     try {
+      // Separamos calle y número de la dirección ingresada (ej: "Rivadavia 123" -> calle: "Rivadavia", numero: "123")
+      const dirString = formData.direccion.trim();
+      const match = dirString.match(/(.*?)\s+(\d+)$/);
+      const calle = match ? match[1].trim() : dirString;
+      const numero = match ? match[2].trim() : 'S/N';
+
       // Armamos el paquete con los datos del envío y los botines
       const payload = {
-        cliente: formData,
-        productos: carrito.map(item => ({
-          id: item.id,
-          nombre: item.nombre,
-          precio: item.precio,
-          cantidad: item.cantidad || 1, 
-          talle: item.talleElegido || 'N/A'
+        // Mapeamos los datos del cliente a los nombres que espera Laravel
+        auth_name: formData.nombre,
+        auth_email: formData.email,
+        direccion: {
+          calle: calle,
+          numero: numero,
+          ciudad: formData.ciudad,
+          provincia: formData.provincia,
+          cp: formData.codigoPostal
+        },
+        metodo_pago_id: 'mercadopago', // Valor por defecto
+        
+        // ¡OJO ACÁ! Laravel espera un array llamado 'items'
+        items: carrito.map(item => ({
+          producto_id: item.id,
+          cantidad: 1, // O item.cantidad si lo manejás en tu estado
+          talle: item.talleElegido,
+          precio_unitario: Number(item.precio) // Laravel necesita esto para calcular el subtotal
         }))
       };
 
@@ -83,7 +101,17 @@ const Checkout = ({ carrito = [], onVolver }) => {
 
     } catch (err) {
       console.error("Error al procesar el pago:", err);
-      alert("Hubo un problema al conectar con la pasarela de pago. Por favor, intentá nuevamente.");
+      if (err.response && err.response.data) {
+        console.error("Detalles del error del backend (422/Validación):", JSON.stringify(err.response.data, null, 2));
+        if (err.response.data.errors) {
+          console.error("Errores de validación específicos:", JSON.stringify(err.response.data.errors, null, 2));
+          alert("Error del servidor (Validación):\n" + JSON.stringify(err.response.data.errors, null, 2));
+        } else {
+          alert("Hubo un problema al conectar con la pasarela de pago. Detalles: " + JSON.stringify(err.response.data, null, 2));
+        }
+      } else {
+        alert("Hubo un problema al conectar con la pasarela de pago. Por favor, intentá nuevamente.");
+      }
       setError("Hubo un error al conectar con el servidor. Revisá la consola.");
       setCargando(false);
     }
@@ -111,6 +139,7 @@ const Checkout = ({ carrito = [], onVolver }) => {
           <input required name="direccion" value={formData.direccion} onChange={handleChange} className={styles.input} placeholder="Dirección (calle, número)" />
           <div className={styles.row}>
             <input required name="ciudad" value={formData.ciudad} onChange={handleChange} className={styles.input} placeholder="Ciudad (ej. Trelew)" />
+            <input required name="provincia" value={formData.provincia} onChange={handleChange} className={styles.input} placeholder="Provincia (ej. Chubut)" />
             <input required name="codigoPostal" value={formData.codigoPostal} onChange={handleChange} className={styles.input} placeholder="Código postal" />
           </div>
           <input required name="pais" value={formData.pais} onChange={handleChange} className={styles.input} placeholder="País (ej. Argentina)" />

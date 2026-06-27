@@ -17,7 +17,14 @@ function App() {
   const [carrito, setCarrito] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [timerListo, setTimerListo] = useState(false);
-  const [vistaActual, setVistaActual] = useState('catalogo');
+  const [vistaActual, setVistaActual] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname;
+      if (path === '/exito') return 'exito';
+      if (path === '/cuenta') return 'cuenta';
+    }
+    return 'catalogo';
+  });
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
   const [filtroActual, setFiltroActual] = useState({ tipo: 'todos', valor: '' });
 
@@ -126,6 +133,9 @@ function App() {
             <Exito onBack={() => { 
               setVistaActual('catalogo'); 
               setFiltroActual({ tipo: 'todos', valor: '' }); // Reseteamos filtro al comprar
+              if (typeof window !== 'undefined' && window.history.pushState) {
+                window.history.pushState({}, '', '/');
+              }
               window.scrollTo(0, 0); 
             }} />
           )}
