@@ -73,10 +73,20 @@ const Checkout = ({ carrito = [], onVolver }) => {
         }))
       };
 
+      // Obtenemos el token de la sesión activa si existe (p. ej. token de Google o Firebase)
+      const token = localStorage.getItem('token') || localStorage.getItem('google_token');
+      
+      const config = {};
+      if (token) {
+        config.headers = {
+          Authorization: `Bearer ${token}`
+        };
+      }
+
       // Hacemos el pedido a Laravel
       // Nota: Usamos /api/api/pedidos para coincidir con la configuración del proxy de Vite (/api) 
       // y el prefijo de la API de Laravel (/api/pedidos), similar a como se hace con productos.
-      const response = await api.post('/api/api/pedidos', payload);
+      const response = await api.post('/api/api/pedidos', payload, config);
 
       // Si Laravel responde con la URL de Mercado Pago, guardamos el pedido y redirigimos
       if (response.data && response.data.init_point) {
