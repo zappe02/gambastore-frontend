@@ -12,6 +12,7 @@ const Checkout = ({ carrito = [], onVolver }) => {
     email: '',
     direccion: '',
     ciudad: '',
+    provincia: '', // Provincia requerida por el backend
     codigoPostal: '',
     pais: 'Argentina'
   });
@@ -30,42 +31,87 @@ const Checkout = ({ carrito = [], onVolver }) => {
 
   // 3. Función para mandar los datos al backend
   const procesarCompra = async (e) => {
-    e.preventDefault(); // Evita que la página se recargue al enviar el formulario
+    if (e) e.preventDefault(); // Evita que la página se recargue al enviar el formulario
+
+    // Validamos el formulario nativamente (si se hace click en el botón)
+    const form = e?.currentTarget?.form || (e?.currentTarget && e.currentTarget.tagName === 'FORM' ? e.currentTarget : null);
+    if (form && !form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
     setCargando(true);
     setError(null);
 
     try {
+      // Separamos calle y número de la dirección ingresada (ej: "Rivadavia 123" -> calle: "Rivadavia", numero: "123")
+      const dirString = formData.direccion.trim();
+      const match = dirString.match(/(.*?)\s+(\d+)$/);
+      const calle = match ? match[1].trim() : dirString;
+      const numero = match ? match[2].trim() : 'S/N';
+
       // Armamos el paquete con los datos del envío y los botines
       const payload = {
-        cliente: formData,
-        productos: carrito.map(item => ({
-          id: item.id,
-          cantidad: 1, 
-          talle: item.talleElegido
+        // Mapeamos los datos del cliente a los nombres que espera Laravel
+        auth_name: formData.nombre,
+        auth_email: formData.email,
+        direccion: {
+          calle: calle,
+          numero: numero,
+          ciudad: formData.ciudad,
+          provincia: formData.provincia,
+          cp: formData.codigoPostal
+        },
+        metodo_pago_id: 'mercadopago', // Valor por defecto
+        
+        // ¡OJO ACÁ! Laravel espera un array llamado 'items'
+        items: carrito.map(item => ({
+          producto_id: item.id,
+          cantidad: 1, // O item.cantidad si lo manejás en tu estado
+          talle: item.talleElegido,
+          precio_unitario: Number(item.precio) // Laravel necesita esto para calcular el subtotal
         }))
       };
 
       // Hacemos el pedido a Laravel
+      // Nota: Usamos /api/api/pedidos para coincidir con la configuración del proxy de Vite (/api) 
+      // y el prefijo de la API de Laravel (/api/pedidos), similar a como se hace con productos.
       const response = await api.post('/api/api/pedidos', payload);
 
       // Si Laravel responde con la URL de Mercado Pago, guardamos el pedido y redirigimos
       if (response.data && response.data.init_point) {
+        // Calculamos el total de forma segura
+        const totalCalculado = carrito.reduce((acc, item) => acc + (Number(item.precio || 0) * (item.cantidad || 1)), 0);
+
+        // Guardamos un registro básico en localStorage
         const pedidoGuardado = {
-          id: 'GAMBA-' + Math.floor(Math.random() * 10000), // Inventamos un ID temporal
-          fecha: new Date().toLocaleDateString(),
-          total: carrito.reduce((acc, item) => acc + (Number(item.precio) * item.cantidad), 0)
+          id: 'GAMBA-' + Math.floor(Math.random() * 1000000), // Generamos un ID con 'GAMBA-' y número aleatorio
+          fecha: new Date().toLocaleDateString('es-AR'), // Guardamos la fecha de hoy
+          total: totalCalculado // Calculamos el total
         };
 
         const historialPrevio = JSON.parse(localStorage.getItem('gamba_pedidos')) || [];
         localStorage.setItem('gamba_pedidos', JSON.stringify([pedidoGuardado, ...historialPrevio]));
 
+        // Redirigimos al usuario a la URL de Mercado Pago
         window.location.href = response.data.init_point; 
       } else {
-        throw new Error("No se recibió el link de pago del servidor.");
+        throw new Error("No se recibió el link de pago (init_point) del servidor.");
       }
 
     } catch (err) {
       console.error("Error al procesar el pago:", err);
+      if (err.response && err.response.data) {
+        console.error("Detalles del error del backend (422/Validación):", JSON.stringify(err.response.data, null, 2));
+        if (err.response.data.errors) {
+          console.error("Errores de validación específicos:", JSON.stringify(err.response.data.errors, null, 2));
+          alert("Error del servidor (Validación):\n" + JSON.stringify(err.response.data.errors, null, 2));
+        } else {
+          alert("Hubo un problema al conectar con la pasarela de pago. Detalles: " + JSON.stringify(err.response.data, null, 2));
+        }
+      } else {
+        alert("Hubo un problema al conectar con la pasarela de pago. Por favor, intentá nuevamente.");
+      }
       setError("Hubo un error al conectar con el servidor. Revisá la consola.");
       setCargando(false);
     }
@@ -93,6 +139,7 @@ const Checkout = ({ carrito = [], onVolver }) => {
           <input required name="direccion" value={formData.direccion} onChange={handleChange} className={styles.input} placeholder="Dirección (calle, número)" />
           <div className={styles.row}>
             <input required name="ciudad" value={formData.ciudad} onChange={handleChange} className={styles.input} placeholder="Ciudad (ej. Trelew)" />
+            <input required name="provincia" value={formData.provincia} onChange={handleChange} className={styles.input} placeholder="Provincia (ej. Chubut)" />
             <input required name="codigoPostal" value={formData.codigoPostal} onChange={handleChange} className={styles.input} placeholder="Código postal" />
           </div>
           <input required name="pais" value={formData.pais} onChange={handleChange} className={styles.input} placeholder="País (ej. Argentina)" />
@@ -108,6 +155,7 @@ const Checkout = ({ carrito = [], onVolver }) => {
           
           <button 
             type="submit" 
+            onClick={procesarCompra}
             className={styles.btnPagar} 
             disabled={cargando || carrito.length === 0}
             style={cargando ? { backgroundColor: '#ccc', cursor: 'not-allowed' } : {}}

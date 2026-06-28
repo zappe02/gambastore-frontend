@@ -1,10 +1,13 @@
 import axios from 'axios';
 
 const api = axios.create({
-    // Dejamos la baseURL vacía. Axios le va a pegar a http://localhost:5173/api/api/productos
-    // Vite va a atajar eso y lo va a reenviar oculto a Vercel con el token.
+    // La dejamos vacía como la tenías para que respete tus rutas exactas (ej: /api/api/productos)
     baseURL: '', 
-    withCredentials: false 
+    withCredentials: false,
+    headers: {
+        // La llave maestra viaja acá para abrir la puerta del backend dev
+        'x-vercel-protection-bypass': 'VyGgJPuCknk5KB1dRUf18eP0E26s94XT'
+    }
 });
 
 export default api;
